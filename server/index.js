@@ -7,7 +7,15 @@ import { listTools, getTool } from "./toolRegistry.js";
 import { binExists, recordRequest } from "./requestBinStore.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CLIENT_DIST = path.join(__dirname, "..", "client", "dist");
+// Resolves correctly whether this runs as source (server/index.js — one
+// level above the repo's client/ folder) or as the bundled build
+// (server/dist/index.js — two levels above), since __dirname/import.meta.url
+// shifts depending on which one is actually executing.
+const CLIENT_DIST_CANDIDATES = [
+  path.join(__dirname, "..", "client", "dist"),
+  path.join(__dirname, "..", "..", "client", "dist"),
+];
+const CLIENT_DIST = CLIENT_DIST_CANDIDATES.find((p) => fs.existsSync(p)) || CLIENT_DIST_CANDIDATES[0];
 
 const app = express();
 const PORT = process.env.PORT || 4000;
