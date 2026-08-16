@@ -1,0 +1,32 @@
+# Runs the two independently-deployable services together. Useful for:
+# - local testing of the Docker images (`docker compose up --build`)
+# - the actual deploy shape on a VPS (pull both images, `docker compose up -d`)
+#
+# In CI, each image is built and pushed separately (see .github/workflows/),
+# so a real deploy pulls tagged images from the registry rather than
+# building here — swap `build:` for `image: ghcr.io/<owner>/...:latest`
+# once you're deploying pre-built images instead of building on the host.
+
+services:
+  api:
+    build: ./server
+    image: tools-techbanda-api:local
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+
+  client:
+    build: ./client
+    image: tools-techbanda-client:local
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      # Container-to-container DNS name within this compose network — nginx
+      # proxies /api/* here. Point this at the API's public URL instead if
+      # the two services ever run on separate hosts.
+      API_UPSTREAM: http://api:4000
+    depends_on:
+      - api
