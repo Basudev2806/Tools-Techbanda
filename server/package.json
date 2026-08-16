@@ -26,13 +26,5 @@
     "qrcode": "^1.5.4",
     "svgo": "^4.0.2",
     "terser": "^5.50.0"
-  },
-  "devDependencies": {
-    "esbuild": "^0.28.2"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }
