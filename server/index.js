@@ -89,6 +89,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ ok: false, error: "Unexpected server error." });
 });
 
-app.listen(PORT, () => {
-  console.log(`tools-techbanda API listening on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`tools-techbanda API listening on http://0.0.0.0:${PORT}`);
 });
